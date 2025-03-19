@@ -1,0 +1,10 @@
+1.FUSS: A Universal and Flexible Framework for Unsupervised Statistical Shape Model Learning
+无监督的三维形状匹配方法，使用解剖学模型。
+
+windows：
+成功复现，但是显存容量不够,出现以下报错：
+ Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 196.00 MiB (GPU 0; 12.00 GiB total capacity; 5.75 GiB already allocated; 3.81 GiB free; 6.30 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+Ubuntu：
+配置环境
