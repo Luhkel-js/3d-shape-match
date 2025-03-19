@@ -1,5 +1,4 @@
-# jiashuo
-3D shape match notebook
+#3D shape match notebook
 
 #一.环境配置
 #windows
