@@ -8,3 +8,4 @@ torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 196.00 MiB (G
 
 Ubuntu：
 配置环境
+使用wheels安装
