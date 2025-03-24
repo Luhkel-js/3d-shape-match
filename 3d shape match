@@ -1,24 +1,25 @@
 1.FUSS: A Universal and Flexible Framework for Unsupervised Statistical Shape Model Learning
 无监督的三维形状匹配方法，使用解剖学模型。
 
-windows：
+#windows：
 成功复现，但是显存容量不够,出现以下报错：
  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
 torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 196.00 MiB (GPU 0; 12.00 GiB total capacity; 5.75 GiB already allocated; 3.81 GiB free; 6.30 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
 
-Ubuntu：
+#Ubuntu：
 配置环境
 使用wheels安装
 成功运行
 
-学习到的知识点：
+#学习到的知识点：
 1.选择训练时的gpu
 self.opt = opt
         #choose which gpu cuda:1
         self.device = torch.device('cuda:1' if opt['num_gpu'] != 0 else 'cpu')
         self.is_train = opt['is_train']
 
-在train过程中出现下面报错：
+#在train过程中出现下面报错：
+fmap_network.py line 74:
 D_i = torch.cat([torch.diag(D[bs, i, :].flatten()).unsqueeze(0) for bs in range(evals_y.shape[0])],
 IndexError: index 16 is out of bounds for dimension 1 with size 16
 初步怀疑是训练配置参数问题
