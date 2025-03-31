@@ -23,3 +23,8 @@ fmap_network.py line 74:
 D_i = torch.cat([torch.diag(D[bs, i, :].flatten()).unsqueeze(0) for bs in range(evals_y.shape[0])],
 IndexError: index 16 is out of bounds for dimension 1 with size 16
 初步怀疑是训练配置参数问题
+确定为网格数据集的顶点数和面数不一致的问题，需要将网格数据进行统一处理。
+
+
+#训练参数设置
+num_workers 为数据加载时使用的线程数，主要依据CPU的核心数，取4 8 12 等。 linux中查看cpu核心数的代码：nproc
