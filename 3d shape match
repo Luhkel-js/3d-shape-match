@@ -18,13 +18,19 @@ self.opt = opt
         self.device = torch.device('cuda:1' if opt['num_gpu'] != 0 else 'cpu')
         self.is_train = opt['is_train']
 
+2.训练参数设置
+num_workers 为数据加载时使用的线程数，主要依据CPU的核心数，取4 8 12 等。 linux中查看cpu核心数的代码：nproc
+
+3.查看GPU占用情况
+Every 0.5s:nvidia-smi
+
 #在train过程中出现下面报错：
 fmap_network.py line 74:
 D_i = torch.cat([torch.diag(D[bs, i, :].flatten()).unsqueeze(0) for bs in range(evals_y.shape[0])],
 IndexError: index 16 is out of bounds for dimension 1 with size 16
 初步怀疑是训练配置参数问题
 确定为网格数据集的顶点数和面数不一致的问题，需要将网格数据进行统一处理。
+数据集统一转化为5000个顶点，10000个面，开始正常训练。
+特征向量个数：n_eig=200  共15epoch 
 
 
-#训练参数设置
-num_workers 为数据加载时使用的线程数，主要依据CPU的核心数，取4 8 12 等。 linux中查看cpu核心数的代码：nproc
