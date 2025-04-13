@@ -49,12 +49,12 @@ if __name__ == '__main__':
             verts, faces = read_shape(off_file)
             filename = os.path.basename(off_file)
 
-            if not no_normalize:
+            if not no_normalize: #如果 no_normalize 为 False，则进行面面积归一化
                 # center shape
                 verts_mean = np.mean(verts, axis=0)
-                verts -= verts_mean
+                verts -= verts_mean #将顶点坐标减去均值，使形状居中。
 
-                # normalize verts by sqrt face area
+                # normalize verts by sqrt face area 计算面的平方根面积
                 old_sqrt_area = laplacian_decomposition(verts=verts, faces=faces, k=1)[-1]
                 print(f'Old face sqrt area: {old_sqrt_area:.3f}')
                 verts /= old_sqrt_area
@@ -68,6 +68,7 @@ if __name__ == '__main__':
                 writer.writerow(data)
 
             if not no_eig:
-                # recompute laplacian decomposition
+                # recompute laplacian decomposition 调用 get_operators 函数计算拉普拉斯算子的特征分解，并将结果存储在 spectral_dir 目录中。
                 get_operators(torch.from_numpy(verts).float(), torch.from_numpy(faces).long(),
                               k=n_eig, cache_dir=spectral_dir)
+
