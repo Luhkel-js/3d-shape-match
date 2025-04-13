@@ -26,6 +26,8 @@ def hash_arrays(arrs):
             running_hash.update(binarr)
     return running_hash.hexdigest()
 
+#功能：计算多个 NumPy 数组的哈希值，用于缓存键生成，确保数据唯一性
+
 
 def torch2np(tensor):
     assert isinstance(tensor, torch.Tensor)
@@ -48,7 +50,8 @@ def sparse_torch_to_np(A):
 
     mat = scipy.sparse.coo_matrix((values, indices), shape=A.shape).tocsc()
     return mat
-
+    
+#在 PyTorch 张量（含稀疏矩阵）和 NumPy 数组之间转换，支持稀疏矩阵的高效存储与计算。
 
 def to_basis(feat, basis, massvec):
     """
@@ -76,6 +79,8 @@ def from_basis(coef, basis):
     """
     feat = torch.matmul(basis, coef)
     return feat
+
+#利用质量矩阵（massvec）对特征加权，通过矩阵乘法实现特征与基函数的转换，用于谱分析
 
 
 def dot(a, b, keepdim=False):
@@ -131,6 +136,7 @@ def normalize(x, eps=1e-12):
     assert x.dim() != 1
     return x / (norm(x, keepdim=True) + eps)
 
+#封装常用向量运算，支持保持维度，用于几何计算（如法向量归一化）
 
 def face_coords(verts, faces):
     """
@@ -190,6 +196,7 @@ def face_normal(verts, faces, is_normalize=True):
 
     return normal
 
+#核心：通过叉积计算面的面积和法向量，是网格处理的基础操作。
 
 def neighborhood_normal(pts):
     """
@@ -264,6 +271,7 @@ def vertex_normal(verts, faces, n_neighbors=30):
 
     return normals
 
+#逻辑：根据输入是否为网格（有面信息），选择不同的法向量计算方法，确保鲁棒性（处理 NaN 和孤立点）。
 
 def find_knn(src_pts, target_pts, k, largest=False, omit_diagonal=False, method='brute'):
     """
@@ -326,6 +334,7 @@ def find_knn(src_pts, target_pts, k, largest=False, omit_diagonal=False, method=
 
         return dist, indices
 
+#优化：根据数据规模自动选择搜索方法，避免内存溢出。
 
 def build_targent_frames(verts, faces, vert_normals=None):
     """
@@ -473,6 +482,7 @@ def build_grad(verts, edges, edge_tangent_vectors):
 
     return mat
 
+#几何意义：为每个顶点构建正交基（X, Y, Z 轴），其中 Z 轴为法向量，X/Y 轴在切平面内，用于局部梯度分解。
 
 def laplacian_decomposition(verts, faces, k=150):
     """
@@ -643,6 +653,8 @@ def compute_operators(verts, faces, k=120, normals=None):
 
     return frames, massvec, L, evals, evecs, gradX, gradY
 
+#核心：根据输入是点云还是网格，选择不同的拉普拉斯矩阵构造方法，通过稀疏矩阵特征分解获取谱特征
+
 
 def get_operators(verts, faces, k=120, normals=None,
                   cache_dir=None, overwrite_cache=False):
@@ -812,6 +824,7 @@ def get_all_operators(verts, faces, k=120,
 
     return frames, mass, L, evals, evecs, gradX, gradY
 
+#优化：通过哈希值缓存计算结果，避免重复计算，提高大规模数据处理效率。
 
 def compute_hks_autoscale(evals, evecs, count=16):
     """
@@ -898,20 +911,25 @@ def get_random_rotation(x, y, z):
 
     return euler_angles_to_rotation_matrix(thetas)
 
+#原理：利用拉普拉斯特征值和特征向量，计算热核在不同时间尺度下的响应，作为形状描述子。
+
 
 def data_augmentation(verts, rot_x=0, rot_y=90.0, rot_z=0, std=0.01, noise_clip=0.05, scale_min=0.9, scale_max=1.1):
-    # random rotation
+    """三维数据增强：旋转、加噪、缩放"""
+    # random rotation 随机旋转（欧拉角）
     rotation_matrix = get_random_rotation(rot_x, rot_y, rot_z).repeat(verts.shape[0], 1, 1).to(verts.device)
     verts = torch.bmm(verts, rotation_matrix.transpose(1, 2))
 
-    # random noise
+    # random noise 高斯噪声
     noise = std * torch.randn(verts.shape).to(verts.device)
     noise = noise.clamp(-noise_clip, noise_clip)
     verts += noise
 
-    # random scaling
+    # random scaling 随机缩放
     scales = [scale_min, scale_max]
     scale = scales[0] + torch.rand((3,)) * (scales[1] - scales[0])
     verts = verts * scale.to(verts.device)
 
     return verts
+
+    #目的：通过几何变换增强训练数据，提高模型泛化能力，常见于三维形状分析任务。
