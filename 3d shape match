@@ -33,4 +33,12 @@ IndexError: index 16 is out of bounds for dimension 1 with size 16
 数据集统一转化为5000个顶点，10000个面，开始正常训练。
 特征向量个数：n_eig=200  共15epoch 
 
+4.评价指标
+**Geodesic Error（测地误差）** 
+是衡量 3D 曲面上两点之间最短路径（测地线）的距离偏差，是评估 3D 形状匹配（Shape Matching）中点对应关系准确性的核心指标。
+在曲面几何中，两点间的测地线是沿着曲面表面的最短路径，而非空间中的直线距离（欧氏距离），因此能更准确反映曲面变形下的几何对应关系。
+在 3D 形状匹配任务中，假设对于源形状上的点 p，其预测对应点为 \(\hat{q}\)，真实对应点为 q，则测地误差定义为预测点与真实点在目标形状表面的测地距离：
+\(\text{Geodesic Error}(p, \hat{q}) = d_{\text{geod}}(q, \hat{q})\)
+其中 \(d_{\text{geod}}(\cdot, \cdot)\) 表示曲面表面的测地距离。
+
 
